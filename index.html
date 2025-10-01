@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GBA Emulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>GBA Emulator (Legal ROMs Only)</h1>
+<div id="gbaContainer">
+  <div id="romDrop">Drag & Drop GBA ROM Here</div>
+  <canvas id="gbaScreen" width="240" height="160"></canvas>
+  <div class="controls">
+    <button onclick="saveState()">Save State</button>
+    <button onclick="loadState()">Load State</button>
+  </div>
+
+  <h3>Cheats</h3>
+  <div class="cheat-inputs">
+    Address: <input type="text" id="cheatAddress" placeholder="hex address" size="6"/>
+    Value: <input type="text" id="cheatValue" placeholder="hex value" size="4"/>
+    <button onclick="addCheat()">Add Cheat</button>
+  </div>
+  <div id="cheatList"></div>
+
+  <!-- On-screen buttons -->
+  <div id="dpad">
+    <div id="up">↑</div>
+    <div id="down">↓</div>
+    <div id="left">←</div>
+    <div id="right">→</div>
+  </div>
+  <div id="btnA" class="gba-btn">A</div>
+  <div id="btnB" class="gba-btn">B</div>
+  <div id="btnL" class="gba-btn">L</div>
+  <div id="btnR" class="gba-btn">R</div>
+  <div id="btnStart" class="gba-btn">Start</div>
+  <div id="btnSelect" class="gba-btn">Select</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/endrift/gbajs/gba.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

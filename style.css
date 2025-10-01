@@ -1,0 +1,24 @@
+body { font-family: Arial, sans-serif; background: #ccc; display: flex; justify-content: center; padding: 20px; flex-direction: column; align-items: center; }
+#gbaContainer { position: relative; width: 480px; max-width: 90vw; background: #555; border-radius: 20px; padding: 20px; box-shadow: 0 0 20px #000; }
+#gbaScreen { display: block; margin: 0 auto; background: #000; border-radius: 8px; }
+#romDrop { border: 2px dashed #fff; padding: 15px; margin: 10px auto; width: 90%; background: #333; color: #fff; cursor: pointer; border-radius: 10px; text-align: center; }
+button, input { margin: 5px; padding: 5px 10px; font-size: 14px; border-radius: 5px; }
+#cheatList { margin-top: 10px; max-height: 150px; overflow-y: auto; border: 1px solid #aaa; padding: 5px; background: #fff; border-radius: 5px; }
+.cheatItem { display: flex; justify-content: space-between; align-items: center; margin: 2px 0; }
+.cheatItem input[type="checkbox"] { margin-right: 5px; }
+/* GBA buttons */
+.gba-btn { position: absolute; border-radius: 50%; width: 50px; height: 50px; background: #e00; border: 2px solid #800; color: #fff; font-weight: bold; display: flex; justify-content: center; align-items: center; user-select: none; }
+#btnA { bottom: 30px; right: 80px; background: #e00; }
+#btnB { bottom: 30px; right: 30px; background: #00e; }
+#btnL { top: 10px; left: 10px; background: #0a0; }
+#btnR { top: 10px; right: 10px; background: #0a0; }
+#btnStart { bottom: 10px; left: 180px; width: 60px; height: 25px; border-radius: 12px; background: #444; }
+#btnSelect { bottom: 10px; left: 110px; width: 60px; height: 25px; border-radius: 12px; background: #444; }
+#dpad { position: absolute; bottom: 50px; left: 30px; width: 80px; height: 80px; }
+#dpad div { position: absolute; width: 30px; height: 30px; background: #666; border-radius: 5px; display: flex; justify-content: center; align-items: center; color: #fff; font-weight: bold; user-select: none; }
+#up { top: 0; left: 25px; }
+#down { bottom: 0; left: 25px; }
+#left { left: 0; top: 25px; }
+#right { right: 0; top: 25px; }
+.controls { text-align:center; margin-top:10px; }
+.cheat-inputs { text-align:center; }
