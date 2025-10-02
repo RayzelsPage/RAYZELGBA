@@ -1,4 +1,4 @@
-// RayzelsGBA — Deluxe v4 (fixed boot + scale)
+// Deluxe v4.1: robust multi-CDN loader + deluxe UI
 const canvas = document.getElementById('gbaScreen');
 const romDrop = document.getElementById('romDrop');
 const romFile = document.getElementById('romFile');
@@ -14,6 +14,8 @@ const batteryFill = document.getElementById('batteryFill');
 const overlay = document.getElementById('overlay');
 const btnPause = document.getElementById('btnPause');
 const scaleSel = document.getElementById('scale');
+const errorPanel = document.getElementById('errorPanel');
+const errorMsg = document.getElementById('errorMsg');
 
 let gbaCore = null; // {type:'gbajs2'|'gbajs1', inst:any}
 let savedState = null;
@@ -64,35 +66,74 @@ function addRecent(name, size){
   localStorage.setItem('rayzels.recents', JSON.stringify(recents));
   renderRecents();
 }
-
-// Recents UI
 const recentPanel = document.getElementById('recentPanel');
 const recentList = document.getElementById('recentList');
 const clearRecent = document.getElementById('clearRecent');
 function renderRecents(){
-  recentList.innerHTML = '';
-  if(!recents.length){ recentPanel.hidden = true; return; }
-  recentPanel.hidden = false;
-  recents.forEach(r => {
-    const chip = document.createElement('button');
-    chip.className = 'recent-item';
-    chip.textContent = `${r.name} • ${Math.round(r.size/1024)} KB`;
-    chip.title = 'Select this ROM again via the file picker';
+  recentList.innerHTML='';
+  if(!recents.length){ recentPanel.hidden=true; return; }
+  recentPanel.hidden=false;
+  recents.forEach(r=>{
+    const chip=document.createElement('button');
+    chip.className='recent-item'; chip.textContent=`${r.name} • ${Math.round(r.size/1024)} KB`;
+    chip.title='Select this ROM again via the file picker';
     chip.addEventListener('click', ()=> romFile.click());
     recentList.appendChild(chip);
   });
 }
-clearRecent?.addEventListener('click', ()=>{
-  recents = []; localStorage.setItem('rayzels.recents','[]'); renderRecents();
-});
+clearRecent?.addEventListener('click', ()=>{ recents=[]; localStorage.setItem('rayzels.recents','[]'); renderRecents(); });
 renderRecents();
+
+// Multi-CDN loader for emulator core
+async function loadEmulatorCore(){
+  const sources = [
+    // Preferred npm dist
+    'https://cdn.jsdelivr.net/npm/gbajs@latest/dist/gba.min.js',
+    'https://unpkg.com/gbajs@latest/dist/gba.min.js',
+    // GitHub mirror (may be rate-limited)
+    'https://cdn.jsdelivr.net/gh/endrift/gbajs/gba.min.js'
+  ];
+  for(const src of sources){
+    try{
+      await injectScript(src, 8000);
+      if(window.GBA || window.GameBoyAdvance){
+        console.log('Loaded emulator from', src);
+        return true;
+      }
+    }catch(e){
+      console.warn('Failed to load', src, e);
+    }
+  }
+  // As a last attempt, try local file if user self-hosted it:
+  try{
+    await injectScript('./gba.min.js', 2000);
+    if(window.GBA || window.GameBoyAdvance){ console.log('Loaded local gba.min.js'); return true; }
+  }catch{}
+  errorPanel.style.display='block';
+  errorMsg.textContent = 'Could not fetch the emulator from multiple CDNs. This is usually a network/extension block. Use the self‑host instructions below.';
+  return false;
+}
+function injectScript(src, timeoutMs=7000){
+  return new Promise((resolve, reject)=>{
+    const s=document.createElement('script'); s.src=src; s.async=true; s.onload=resolve; s.onerror=()=>reject(new Error('load error'));
+    document.head.appendChild(s);
+    setTimeout(()=> reject(new Error('timeout')), timeoutMs);
+  });
+}
+
+// Ensure core is loaded soon after page load
+loadEmulatorCore();
 
 // Boot logic (supports both gbajs flavors)
 let currentName = '';
 async function bootFromFile(file){
   currentName = file.name;
   addRecent(file.name, file.size);
-  // Try legacy API first if present (loadRomFromFile handles file directly)
+  // Wait for core if still loading
+  if(!window.GBA && !window.GameBoyAdvance){
+    const ok = await loadEmulatorCore();
+    if(!ok) return;
+  }
   if (window.GameBoyAdvance) {
     try{
       const gba = new window.GameBoyAdvance();
@@ -107,7 +148,6 @@ async function bootFromFile(file){
       return;
     }catch(e){ console.warn('gbajs1 failed', e); }
   }
-  // Otherwise use modern buffer-based API
   const buffer = await file.arrayBuffer();
   if (window.GBA) {
     try{
@@ -119,7 +159,8 @@ async function bootFromFile(file){
       return;
     }catch(e){ console.warn('gbajs2 failed', e); }
   }
-  alert('Emulator core failed to initialize. Try a different browser or network.');
+  errorPanel.style.display='block';
+  errorMsg.textContent = 'The emulator script loaded, but did not expose a compatible API. Try a different browser, or self‑host a known-good build (see below).';
 }
 
 // Drag & drop / Browse
@@ -204,8 +245,7 @@ document.getElementById('cheatsFile')?.addEventListener('change', async (e) => {
 function applyCheats(){
   if(!gbaCore) return;
   const inst = gbaCore.inst;
-  // Only the modern core exposes .memory.view; if missing, skip quietly
-  if(!inst?.memory?.view) return;
+  if(!inst?.memory?.view) return; // only works on modern core
   cheats.forEach(c => {
     if(!c.enabled) return;
     try{
@@ -225,8 +265,7 @@ document.getElementById('btnReset').addEventListener('click', resetCore);
 function saveState(){
   if(!gbaCore) return alert('Load a ROM first.');
   try{
-    if(gbaCore.type==='gbajs2'){ savedState = gbaCore.inst.saveState?.(); }
-    else if(gbaCore.type==='gbajs1'){ savedState = gbaCore.inst.saveState?.(); }
+    savedState = gbaCore.inst.saveState?.();
     if(savedState){ localStorage.setItem('rayzels.state', JSON.stringify(savedState)); alert('State saved.'); }
     else alert('This core does not expose saveState in this build.');
   }catch(e){ alert('Could not save state in this build.'); }
@@ -237,16 +276,14 @@ function loadState(){
     const ls = localStorage.getItem('rayzels.state');
     const src = ls ? JSON.parse(ls) : savedState;
     if(!src) return alert('No saved state found.');
-    if(gbaCore.type==='gbajs2'){ gbaCore.inst.loadState?.(src); }
-    else if(gbaCore.type==='gbajs1'){ gbaCore.inst.loadState?.(src); }
+    gbaCore.inst.loadState?.(src);
     alert('State loaded.');
   }catch(e){ alert('Could not load state in this build.'); }
 }
 function resetCore(){
   if(!gbaCore) return;
   try{
-    if(gbaCore.type==='gbajs2'){ gbaCore.inst.pause?.(); gbaCore.inst.reset?.(); gbaCore.inst.run?.(); }
-    else if(gbaCore.type==='gbajs1'){ gbaCore.inst.pause?.(); gbaCore.inst.reset?.(); (gbaCore.inst.runStable?.() || gbaCore.inst.run?.()); }
+    gbaCore.inst.pause?.(); gbaCore.inst.reset?.(); (gbaCore.inst.runStable?.() || gbaCore.inst.run?.());
   }catch(_){}
 }
 

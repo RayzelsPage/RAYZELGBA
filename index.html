@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RayzelsGBA — Deluxe v4</title>
+<title>RayzelsGBA — Deluxe v4.1</title>
 <link rel="stylesheet" href="style.css">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://unpkg.com">
 </head>
 <body class="theme-auto">
 <!-- Splash -->
@@ -35,8 +36,8 @@
 <main>
   <section class="hero">
     <div class="container hero-inner">
-      <h1>Beautiful, Professional, and Fixed.</h1>
-      <p class="lead">Deluxe look + robust boot logic that works across emulator builds. Default **4×** screen, up to **8×**. Instant GitHub Pages deploy.</p>
+      <h1>Deluxe v4.1 — Robust Loader</h1>
+      <p class="lead">Now with a multi‑CDN script loader and diagnostics. Default **4×** screen (up to **8×**). If networks block CDNs, self‑host instructions appear in the error panel.</p>
       <div class="cta-row">
         <a class="btn primary" href="#play">Play Now</a>
         <a class="btn ghost" href="#about">Learn More</a>
@@ -94,6 +95,21 @@
         <button id="clearRecent" class="btn tiny ghost">Clear</button>
       </div>
       <div id="recentList" class="recent-list"></div>
+    </div>
+
+    <div id="errorPanel" class="panel container" style="display:none; border-color:#ff5d5d">
+      <h3 style="margin-top:0">Emulator core failed to load</h3>
+      <p class="muted" id="errorMsg">Network blocked or CDN unreachable.</p>
+      <ol>
+        <li>Try another browser or network (mobile hotspot).</li>
+        <li>Hard refresh (Ctrl+F5 / Cmd+Shift+R).</li>
+        <li>If you have restrictions, <strong>self‑host</strong> the emulator file:
+          <pre><code>Download: https://unpkg.com/gbajs@latest/dist/gba.min.js
+Place it next to index.html and name it: <strong>gba.min.js</strong>
+Then edit index.html to include:
+&lt;script src="./gba.min.js"&gt;&lt;/script&gt;</code></pre>
+        </li>
+      </ol>
     </div>
 
     <div class="device glass">
@@ -160,7 +176,7 @@
 
   <section id="about" class="panel container">
     <h2>About</h2>
-    <p>Deluxe v4 enhances the open‑source <code>gba.js</code> core with a crafted interface, robust multi-API boot logic, and a large, scalable screen. Emulators are legal; copyrighted ROMs are not. Please use homebrew/open‑source titles or your own backups.</p>
+    <p>Deluxe v4.1 keeps the premium look and adds a resilient loader that tries multiple CDNs (and gives you a one‑line local fallback) so ROMs boot reliably.</p>
   </section>
 </main>
 
@@ -187,9 +203,6 @@
   </div>
 </footer>
 
-<!-- Emulator core with fallback -->
-<script src="https://cdn.jsdelivr.net/gh/endrift/gbajs/gba.min.js"
-        onerror="(function(){var s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/gbajs@latest/dist/gba.min.js'; document.head.appendChild(s);}())"></script>
 <script src="script.js"></script>
 </body>
 </html>

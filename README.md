@@ -1,25 +1,25 @@
-# RayzelsGBA — Deluxe v4
+# RayzelsGBA — Deluxe v4.1
 
-**Deluxe look + fixed boot + big screen.** Beautiful glass UI, rounded transparent controls, pause overlay, FPS meter, recent ROMs, cheats, haptics—now with **robust multi‑API boot logic** so ROMs actually run across different CDN builds of `gba.js`. Default **4×** screen with a scale selector up to **8×**.
+Everything from v4 + a **multi‑CDN loader** and a clear **self‑host fallback** so the emulator boots even on restrictive networks.
 
-## Quick start
-- Open `index.html` locally, or
-- Serve locally:
-  ```bash
-  python -m http.server 8000
-  ```
-- Click **Browse ROM**, pick a **legal** `.gba`, and play.
+## Deploy
+1. Upload `index.html`, `style.css`, `script.js`, `README.md` to your repo root.
+2. Settings → **Pages** → Source: `main` (root).
+3. Open your Pages link → Browse ROM → pick a legal `.gba`.
 
-## GitHub Pages
-1. Create a repo (e.g., `rayzelsgba-deluxe-v4`).
-2. Upload `index.html`, `style.css`, `script.js`, `README.md`.
-3. Settings → **Pages** → Source: `main` (root).  
-4. Open your Pages URL. Done.
+## If the emulator core fails to load
+Some networks or extensions block CDNs. The page now tries multiple sources:
+- `cdn.jsdelivr.net/npm/gbajs@latest/dist/gba.min.js`
+- `unpkg.com/gbajs@latest/dist/gba.min.js`
+- `cdn.jsdelivr.net/gh/endrift/gbajs/gba.min.js`
+
+If those fail, download the file locally and place it next to `index.html` as `gba.min.js`, then make sure your `index.html` includes:
+```html
+<script src="./gba.min.js"></script>
+```
+(Deluxe v4.1 will try this local file automatically as a last resort.)
 
 ## Notes
-- The emulator `<script>` uses a fallback: primary `jsDelivr (gh)` then `npm` if needed.
-- Cheats write 16‑bit values to addresses (simple mode). Not a GameShark parser.
-- Save state availability depends on the loaded core build.
-
-## Legal
-Emulators are legal; distributing/downloading copyrighted ROMs you don’t own isn’t. Please use only lawful ROMs.
+- Default screen is **4×** (set 2×–8× in the top bar).
+- Cheats: simple 16‑bit memory writes (not full GameShark parsing).
+- Save states depend on the exposed core build.
