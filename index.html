@@ -2,46 +2,181 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBA Emulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RayzelsGBA — Deluxe v3</title>
 <link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 </head>
-<body>
-
-<h1>GBA Emulator (Legal ROMs Only)</h1>
-<div id="gbaContainer">
-  <div id="romDrop">Drag & Drop GBA ROM Here</div>
-  <canvas id="gbaScreen" width="240" height="160"></canvas>
-  <div class="controls">
-    <button onclick="saveState()">Save State</button>
-    <button onclick="loadState()">Load State</button>
+<body class="theme-auto">
+<!-- Splash -->
+<div id="splash" class="splash">
+  <div class="splash-inner">
+    <div class="logo">🎮</div>
+    <div class="title">RayzelsGBA<span class="tm">™</span></div>
+    <div class="pulse"></div>
   </div>
-
-  <h3>Cheats</h3>
-  <div class="cheat-inputs">
-    Address: <input type="text" id="cheatAddress" placeholder="hex address" size="6"/>
-    Value: <input type="text" id="cheatValue" placeholder="hex value" size="4"/>
-    <button onclick="addCheat()">Add Cheat</button>
-  </div>
-  <div id="cheatList"></div>
-
-  <!-- On-screen buttons -->
-  <div id="dpad">
-    <div id="up">↑</div>
-    <div id="down">↓</div>
-    <div id="left">←</div>
-    <div id="right">→</div>
-  </div>
-  <div id="btnA" class="gba-btn">A</div>
-  <div id="btnB" class="gba-btn">B</div>
-  <div id="btnL" class="gba-btn">L</div>
-  <div id="btnR" class="gba-btn">R</div>
-  <div id="btnStart" class="gba-btn">Start</div>
-  <div id="btnSelect" class="gba-btn">Select</div>
 </div>
+
+<header class="site-header blur">
+  <nav class="nav container">
+    <div class="brand">
+      <span class="logo">🎮</span>
+      <span class="wordmark">RayzelsGBA<span class="tm">™</span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#play">Play</a></li>
+      <li><a href="#cheats">Cheats</a></li>
+      <li><a href="#about">About</a></li>
+      <li><button class="btn tiny ghost" id="toggleTheme" title="Toggle theme">Theme</button></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container hero-inner">
+      <h1>Smoother, smarter, prettier.</h1>
+      <p class="lead">Now with a pause menu overlay, FPS meter, performance “battery”, and a quick **Recent ROMs** list. Still instant to use and GitHub Pages–ready.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#play">Play Now</a>
+        <a class="btn ghost" href="#about">Learn More</a>
+      </div>
+    </div>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </section>
+
+  <section id="play" class="panel container">
+    <div class="topbar">
+      <h2>Load a ROM</h2>
+      <div class="status">
+        <span id="fps" class="chip">FPS: --</span>
+        <span class="battery" title="Performance">
+          <span id="batteryFill" class="fill" style="width:0%"></span>
+        </span>
+        <button id="btnPause" class="btn tiny ghost" aria-haspopup="dialog">Pause ▌▌</button>
+      </div>
+    </div>
+    <p class="muted">Drag & Drop or click <strong>Browse ROM</strong>. <strong>Legal use only.</strong></p>
+
+    <div class="uploader">
+      <div id="romDrop" class="dropzone" tabindex="0" aria-label="ROM Dropzone">
+        <div class="dz-inner">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 15v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 3v12m0 0l-4-4m4 4l4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          <div class="dz-text">
+            <strong>Drag & Drop</strong> your <code>.gba</code> here
+            <div class="or">or</div>
+            <label for="romFile" class="btn soft">Browse ROM (.gba)</label>
+            <input id="romFile" type="file" accept=".gba" hidden>
+          </div>
+        </div>
+      </div>
+      <div id="romMeta" class="rom-meta" hidden>
+        <span class="chip" id="romName"></span>
+        <span class="chip ok" id="romStatus">Ready</span>
+      </div>
+    </div>
+
+    <div class="recent panel glass" id="recentPanel" hidden>
+      <div class="recent-head">
+        <h3>Recent ROMs</h3>
+        <button id="clearRecent" class="btn tiny ghost">Clear</button>
+      </div>
+      <div id="recentList" class="recent-list"></div>
+    </div>
+
+    <div class="device glass">
+      <canvas id="gbaScreen" width="240" height="160" aria-label="Game screen"></canvas>
+      <div class="device-footer">
+        <span class="device-mark">RayzelsGBA<span class="tm">™</span></span>
+      </div>
+
+      <!-- Rounded transparent touch controls -->
+      <div class="touch-controls">
+        <div class="dpad">
+          <button class="pad up"    data-key="UP"    aria-label="Up"></button>
+          <button class="pad down"  data-key="DOWN"  aria-label="Down"></button>
+          <button class="pad left"  data-key="LEFT"  aria-label="Left"></button>
+          <button class="pad right" data-key="RIGHT" aria-label="Right"></button>
+        </div>
+        <div class="buttons">
+          <button class="ab a" data-key="A" aria-label="A">A</button>
+          <button class="ab b" data-key="B" aria-label="B">B</button>
+        </div>
+        <div class="shoulders">
+          <button class="shoulder l" data-key="L" aria-label="L">L</button>
+          <button class="shoulder r" data-key="R" aria-label="R">R</button>
+        </div>
+        <div class="start-select">
+          <button class="pill" data-key="START" aria-label="Start">Start</button>
+          <button class="pill" data-key="SELECT" aria-label="Select">Select</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="btnSave">Save State</button>
+      <button class="btn" id="btnLoad">Load State</button>
+      <button class="btn ghost" id="btnReset">Reset</button>
+    </div>
+  </section>
+
+  <section id="cheats" class="panel container">
+    <div class="split">
+      <div>
+        <h2>Cheat Manager</h2>
+        <p class="muted">Simple, reliable memory patches. Toggle on/off at any time.</p>
+        <form class="cheat-form" onsubmit="return false;">
+          <label>Address (hex)
+            <input type="text" id="cheatAddress" placeholder="e.g., 03007E0C" inputmode="text" autocomplete="off">
+          </label>
+          <label>Value (hex)
+            <input type="text" id="cheatValue" placeholder="e.g., 0001" inputmode="text" autocomplete="off">
+          </label>
+          <div class="row">
+            <button class="btn soft" id="btnAddCheat">Add Cheat</button>
+            <button class="btn ghost" id="btnExportCheats">Export</button>
+            <label class="btn ghost" for="cheatsFile">Import</label>
+            <input id="cheatsFile" type="file" accept=".json" hidden>
+          </div>
+        </form>
+      </div>
+      <div>
+        <div class="cheat-list glass" id="cheatList" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="panel container">
+    <h2>About</h2>
+    <p>RayzelsGBA enhances the open‑source <code>gba.js</code> core with a crafted interface, gorgeous theming, and accessibility. Emulators are legal; copyrighted ROMs are not. Please use homebrew/open‑source titles or your own backups.</p>
+  </section>
+</main>
+
+<!-- Pause/Menu overlay -->
+<div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="menuTitle" hidden>
+  <div class="overlay-content glass">
+    <h3 id="menuTitle">Menu</h3>
+    <div class="overlay-grid">
+      <button class="btn primary" id="ovResume">Resume ▶</button>
+      <button class="btn" id="ovSave">Save State 💾</button>
+      <button class="btn" id="ovLoad">Load State ⤓</button>
+      <button class="btn ghost" id="ovReset">Reset ↻</button>
+      <button class="btn ghost" id="ovTheme">Toggle Theme</button>
+      <button class="btn danger" id="ovClose">Close ✕</button>
+    </div>
+    <p class="muted small">Tip: Press <code>Esc</code> to open/close.</p>
+  </div>
+</div>
+
+<footer class="site-footer container">
+  <div class="footer-inner">
+    <span>© <span id="year"></span> RayzelsGBA<span class="tm">™</span>. For educational and personal use only.</span>
+    <a href="#play" class="btn tiny ghost">Back to top</a>
+  </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/gh/endrift/gbajs/gba.min.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
