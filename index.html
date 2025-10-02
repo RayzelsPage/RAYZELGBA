@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RayzelsGBA — Deluxe v4.1</title>
+<title>RayzelsGBA — Deluxe v4.4</title>
 <link rel="stylesheet" href="style.css">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="preconnect" href="https://unpkg.com">
 </head>
 <body class="theme-auto">
-<!-- Splash -->
 <div id="splash" class="splash">
   <div class="splash-inner">
     <div class="logo">🎮</div>
@@ -36,8 +35,8 @@
 <main>
   <section class="hero">
     <div class="container hero-inner">
-      <h1>Deluxe v4.1 — Robust Loader</h1>
-      <p class="lead">Now with a multi‑CDN script loader and diagnostics. Default **4×** screen (up to **8×**). If networks block CDNs, self‑host instructions appear in the error panel.</p>
+      <h1>Deluxe v4.4 — Auto Fit</h1>
+      <p class="lead">Now scales the screen automatically to the largest clean multiple that fits your window. Still Safari‑proof, local‑first, and beautiful.</p>
       <div class="cta-row">
         <a class="btn primary" href="#play">Play Now</a>
         <a class="btn ghost" href="#about">Learn More</a>
@@ -53,13 +52,16 @@
       <div class="status">
         <label class="scale-label">Scale
           <select id="scale">
+            <option value="auto" selected>Auto</option>
             <option value="2">2×</option>
             <option value="3">3×</option>
-            <option value="4" selected>4×</option>
+            <option value="4">4×</option>
             <option value="5">5×</option>
             <option value="6">6×</option>
             <option value="7">7×</option>
             <option value="8">8×</option>
+            <option value="9">9×</option>
+            <option value="10">10×</option>
           </select>
         </label>
         <span id="fps" class="chip">FPS: --</span>
@@ -97,22 +99,7 @@
       <div id="recentList" class="recent-list"></div>
     </div>
 
-    <div id="errorPanel" class="panel container" style="display:none; border-color:#ff5d5d">
-      <h3 style="margin-top:0">Emulator core failed to load</h3>
-      <p class="muted" id="errorMsg">Network blocked or CDN unreachable.</p>
-      <ol>
-        <li>Try another browser or network (mobile hotspot).</li>
-        <li>Hard refresh (Ctrl+F5 / Cmd+Shift+R).</li>
-        <li>If you have restrictions, <strong>self‑host</strong> the emulator file:
-          <pre><code>Download: https://unpkg.com/gbajs@latest/dist/gba.min.js
-Place it next to index.html and name it: <strong>gba.min.js</strong>
-Then edit index.html to include:
-&lt;script src="./gba.min.js"&gt;&lt;/script&gt;</code></pre>
-        </li>
-      </ol>
-    </div>
-
-    <div class="device glass">
+    <div class="device glass" id="deviceBox">
       <canvas id="gbaScreen" width="240" height="160" aria-label="Game screen"></canvas>
       <div class="device-footer">
         <span class="device-mark">RayzelsGBA<span class="tm">™</span></span>
@@ -176,11 +163,10 @@ Then edit index.html to include:
 
   <section id="about" class="panel container">
     <h2>About</h2>
-    <p>Deluxe v4.1 keeps the premium look and adds a resilient loader that tries multiple CDNs (and gives you a one‑line local fallback) so ROMs boot reliably.</p>
+    <p>Auto Fit picks the largest integer multiple of 240×160 that fits inside the device panel or viewport, and updates on resize/rotate. You can still choose a fixed scale anytime.</p>
   </section>
 </main>
 
-<!-- Pause/Menu overlay -->
 <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="menuTitle" hidden>
   <div class="overlay-content glass">
     <h3 id="menuTitle">Menu</h3>
@@ -203,6 +189,8 @@ Then edit index.html to include:
   </div>
 </footer>
 
+<!-- Local-first core; script.js will CDN-fallback if needed -->
+<script src="./gba.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

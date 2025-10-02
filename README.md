@@ -1,25 +1,17 @@
-# RayzelsGBA — Deluxe v4.1
+# RayzelsGBA — Deluxe v4.4 (Auto Fit)
 
-Everything from v4 + a **multi‑CDN loader** and a clear **self‑host fallback** so the emulator boots even on restrictive networks.
+- **Auto Fit** scales the canvas to the largest integer multiple of **240×160** that fits your window/panel, and updates on resize.  
+- Still **Safari‑proof** (local‑first `./gba.min.js`), with CDN fallback.
+- Deluxe polish: pause overlay (Esc), FPS/perf, recents, cheats, glass UI, haptics.
 
-## Deploy
-1. Upload `index.html`, `style.css`, `script.js`, `README.md` to your repo root.
-2. Settings → **Pages** → Source: `main` (root).
-3. Open your Pages link → Browse ROM → pick a legal `.gba`.
+## Quick Start
+1. Ensure a real **`gba.min.js`** is next to `index.html` (copy from your v4.2 folder or download from unpkg/jsDelivr).
+2. Upload everything to your GitHub repo root.
+3. GitHub **Settings → Pages** → Source: `main` (root).
+4. Open your Pages link → **Browse ROM** → pick a legal `.gba`.
 
-## If the emulator core fails to load
-Some networks or extensions block CDNs. The page now tries multiple sources:
-- `cdn.jsdelivr.net/npm/gbajs@latest/dist/gba.min.js`
-- `unpkg.com/gbajs@latest/dist/gba.min.js`
-- `cdn.jsdelivr.net/gh/endrift/gbajs/gba.min.js`
+## Optional fixed scales
+Use the Scale dropdown to pick 2×–10× instead of Auto.
 
-If those fail, download the file locally and place it next to `index.html` as `gba.min.js`, then make sure your `index.html` includes:
-```html
-<script src="./gba.min.js"></script>
-```
-(Deluxe v4.1 will try this local file automatically as a last resort.)
-
-## Notes
-- Default screen is **4×** (set 2×–8× in the top bar).
-- Cheats: simple 16‑bit memory writes (not full GameShark parsing).
-- Save states depend on the exposed core build.
+## Legal
+Use only lawful ROMs (homebrew or backups you own). Emulators are legal; copyrighted ROM distribution is not.

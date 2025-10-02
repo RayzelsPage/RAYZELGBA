@@ -1,4 +1,4 @@
-/* Same style as v4 (omitted for brevity here, but included fully) */
+/* Deluxe v4.4 styles */
 :root{
   --bg: #0b0d12;
   --panel: rgba(255,255,255,0.06);
@@ -131,7 +131,7 @@ body{
 
 .site-footer{padding:28px 0; color:var(--muted)}
 .footer-inner{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap}
-code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:.95em}
+code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:.95em}
 
 /* Responsive */
 @media (max-width: 900px){
