@@ -1,4 +1,4 @@
-/* Light/Dark auto theme with toggle and refined glass UI */
+/* Light/Dark theme, glass UI, rounded transparent controls */
 :root{
   --bg: #0b0d12;
   --panel: rgba(255,255,255,0.06);
@@ -12,25 +12,12 @@
   --shadow: 0 10px 30px rgba(0,0,0,.35);
   --radius: 18px;
 }
-
 @media (prefers-color-scheme: light){
   body.theme-auto{
-    --bg:#f7f8fb;
-    --panel: rgba(0,0,0,0.04);
-    --panel-border: rgba(0,0,0,0.12);
-    --text:#1a1d2a; --muted:#5b6177;
-    --shadow: 0 10px 30px rgba(0,0,0,.08);
+    --bg:#f7f8fb; --panel: rgba(0,0,0,0.04); --panel-border: rgba(0,0,0,0.12);
+    --text:#1a1d2a; --muted:#5b6177; --shadow: 0 10px 30px rgba(0,0,0,.08);
   }
 }
-body.theme-dark{}
-body.theme-light{
-  --bg:#f7f8fb;
-  --panel: rgba(0,0,0,0.04);
-  --panel-border: rgba(0,0,0,0.12);
-  --text:#1a1d2a; --muted:#5b6177;
-  --shadow: 0 10px 30px rgba(0,0,0,.08);
-}
-
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
@@ -39,19 +26,9 @@ body{
               radial-gradient(900px 500px at 100% 0%, #26183d 0%, transparent 50%),
               var(--bg);
   color:var(--text);
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family: ui-sans-serif, -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial;
   line-height:1.45;
 }
-
-/* Splash */
-.splash{position:fixed; inset:0; display:grid; place-items:center; background: radial-gradient(800px 400px at 50% -10%, #1b2440 0%, transparent 60%), var(--bg); z-index:9999; transition: opacity .6s ease}
-.splash.hidden{opacity:0; pointer-events:none}
-.splash .splash-inner{display:grid; place-items:center; gap:10px; text-align:center}
-.splash .logo{font-size:48px}
-.splash .title{font-size:24px; font-weight:800; letter-spacing:.08em}
-.splash .pulse{width:64px; height:4px; border-radius:999px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); animation: pulse 1.3s infinite ease-in-out}
-@keyframes pulse{0%,100%{transform:scaleX(.4); opacity:.6}50%{transform:scaleX(1); opacity:1}}
-
 .container{max-width:1100px; margin:0 auto; padding:0 20px}
 .site-header{position:sticky; top:0; z-index:100; backdrop-filter: blur(10px); border-bottom:1px solid var(--panel-border)}
 .nav{display:flex; align-items:center; justify-content:space-between; height:64px}
@@ -80,9 +57,10 @@ body{
 .orb-2{width:420px; height:420px; background: radial-gradient(circle at 70% 30%, #ff7ad9, transparent 60%); top: -40px; right: -80px}
 
 .panel{margin: 28px auto; padding: 24px; background: var(--panel); border:1px solid var(--panel-border); border-radius: var(--radius); box-shadow: var(--shadow)}
-.panel h2{margin:0 0 6px}
+.panel h2{margin-top:0}
 .topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px}
 .status{display:flex; align-items:center; gap:10px}
+.scale-label select{background: rgba(255,255,255,.06); border:1px solid var(--panel-border); color:var(--text); border-radius:10px; padding:6px 10px}
 .chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; background: rgba(255,255,255,.08); border:1px solid var(--panel-border); border-radius:999px; font-size:12px}
 .chip.ok{border-color: rgba(61,220,132,.6); color: #9af3c1}
 .battery{position:relative; width:48px; height:18px; border-radius:6px; border:1px solid var(--panel-border); background: rgba(255,255,255,.08); overflow:hidden}

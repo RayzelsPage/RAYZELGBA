@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RayzelsGBA — Deluxe v3</title>
+<title>RayzelsGBA — Deluxe v4</title>
 <link rel="stylesheet" href="style.css">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 </head>
@@ -35,8 +35,8 @@
 <main>
   <section class="hero">
     <div class="container hero-inner">
-      <h1>Smoother, smarter, prettier.</h1>
-      <p class="lead">Now with a pause menu overlay, FPS meter, performance “battery”, and a quick **Recent ROMs** list. Still instant to use and GitHub Pages–ready.</p>
+      <h1>Beautiful, Professional, and Fixed.</h1>
+      <p class="lead">Deluxe look + robust boot logic that works across emulator builds. Default **4×** screen, up to **8×**. Instant GitHub Pages deploy.</p>
       <div class="cta-row">
         <a class="btn primary" href="#play">Play Now</a>
         <a class="btn ghost" href="#about">Learn More</a>
@@ -50,6 +50,17 @@
     <div class="topbar">
       <h2>Load a ROM</h2>
       <div class="status">
+        <label class="scale-label">Scale
+          <select id="scale">
+            <option value="2">2×</option>
+            <option value="3">3×</option>
+            <option value="4" selected>4×</option>
+            <option value="5">5×</option>
+            <option value="6">6×</option>
+            <option value="7">7×</option>
+            <option value="8">8×</option>
+          </select>
+        </label>
         <span id="fps" class="chip">FPS: --</span>
         <span class="battery" title="Performance">
           <span id="batteryFill" class="fill" style="width:0%"></span>
@@ -149,7 +160,7 @@
 
   <section id="about" class="panel container">
     <h2>About</h2>
-    <p>RayzelsGBA enhances the open‑source <code>gba.js</code> core with a crafted interface, gorgeous theming, and accessibility. Emulators are legal; copyrighted ROMs are not. Please use homebrew/open‑source titles or your own backups.</p>
+    <p>Deluxe v4 enhances the open‑source <code>gba.js</code> core with a crafted interface, robust multi-API boot logic, and a large, scalable screen. Emulators are legal; copyrighted ROMs are not. Please use homebrew/open‑source titles or your own backups.</p>
   </section>
 </main>
 
@@ -176,7 +187,9 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/gh/endrift/gbajs/gba.min.js"></script>
+<!-- Emulator core with fallback -->
+<script src="https://cdn.jsdelivr.net/gh/endrift/gbajs/gba.min.js"
+        onerror="(function(){var s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/gbajs@latest/dist/gba.min.js'; document.head.appendChild(s);}())"></script>
 <script src="script.js"></script>
 </body>
 </html>
